@@ -1,0 +1,13 @@
+light:
+
+  - platform: mqtt
+    name: "Blinds"
+    state_topic: "blinds/cmd/state"
+    command_topic: "blinds/cmd"
+    brightness_state_topic: "blinds/level/state"
+    brightness_command_topic: "blinds/level"
+    brightness_scale: 100
+    payload_on: "on"
+    payload_off: "off"
+    optimistic: false
+    retain: true
