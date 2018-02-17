@@ -34,7 +34,8 @@ int level;
 int cur_off; 
 int itsatrap = 0;
 int servoPin = D3;
-int max_angle = 133;
+int open_angle = 0;
+int closed_angle = 133;
 
 
 void setup() {
@@ -106,12 +107,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
     String mytopic(topic);
     if (mytopic == "blinds/level/state") {
           cur_val = message.toInt();
-          cur_val = map (cur_val, 0, 100, max_angle, 0);
+          cur_val = map (cur_val, 0, 100, closed_angle, open_angle);
     }
     if (itsatrap == 0 && mytopic == "blinds/cmd" && message.equalsIgnoreCase("on")) {
       myservo.attach(servoPin);
       delay(100);
-      for (pos = max_angle; pos >= cur_val; pos -= 1) {
+      for (pos = closed_angle; pos >= cur_val; pos -= 1) {
         myservo.write(pos);
         delay(20);
       }
@@ -123,7 +124,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     else if (mytopic == "blinds/cmd" && message.equalsIgnoreCase("off")) {
       myservo.attach(servoPin);
       delay(100);
-      for (pos = cur_val; pos <= max_angle; pos += 1) {
+      for (pos = cur_val; pos <= closed_angle; pos += 1) {
         myservo.write(pos);
         delay(20);
       }
@@ -138,9 +139,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
       delay(100);
       val = message.toInt();
       level = val;
-      val = map (val, 0, 100, max_angle, 0);
+      val = map (val, 0, 100, closed_angle, open_angle);
       if (cur_off == 1) {
-        for (pos = max_angle; pos >= val; pos -= 1) {
+        for (pos = closed_angle; pos >= val; pos -= 1) {
           myservo.write(pos);
           delay(20);
         }
