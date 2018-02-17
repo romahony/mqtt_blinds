@@ -34,8 +34,8 @@ int level;
 int cur_off; 
 int itsatrap = 0;
 int servoPin = D3;
-int open_angle = 0;
-int closed_angle = 133;
+int open_angle = 0; // The angle of the servo when fully open
+int closed_angle = 133;  // The angle of the servo when fully closed
 
 
 void setup() {
