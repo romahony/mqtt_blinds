@@ -34,8 +34,8 @@ int level;
 int cur_off; 
 int itsatrap = 0;
 int servoPin = D3;
-int open_angle = 90; // The angle of the servo when fully open
-int closed_angle = 0;  // The angle of the servo when fully closed
+int open_angle = 0; // The angle of the servo when fully open
+int closed_angle = 90;  // The angle of the servo when fully closed
 
 
 void setup() {
@@ -112,7 +112,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     if (itsatrap == 0 && mytopic == "blinds/cmd" && message.equalsIgnoreCase("on")) {
       myservo.attach(servoPin);
       delay(100);
-      for (pos = closed_angle; pos <= cur_val; pos += 1) {
+      for (pos = closed_angle; pos >= cur_val; pos -= 1) {
         myservo.write(pos);
         delay(20);
       }
@@ -124,7 +124,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     else if (mytopic == "blinds/cmd" && message.equalsIgnoreCase("off")) {
       myservo.attach(servoPin);
       delay(100);
-      for (pos = cur_val; pos >= closed_angle; pos -= 1) {
+      for (pos = cur_val; pos <= closed_angle; pos += 1) {
         myservo.write(pos);
         delay(20);
       }
@@ -141,18 +141,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
       level = val;
       val = map (val, 0, 100, closed_angle, open_angle);
       if (cur_off == 1) {
-        for (pos = closed_angle; pos <= val; pos += 1) {
+        for (pos = closed_angle; pos >= val; pos -= 1) {
           myservo.write(pos);
           delay(20);
         }
         cur_off = 0;
-      } else if (cur_val < val) {
-        for (pos = cur_val; pos <= val; pos += 1) {
+      } else if (cur_val > val) {
+        for (pos = cur_val; pos >= val; pos -= 1) {
           myservo.write(pos);
           delay(20);
         }
       } else {
-        for (pos = cur_val; pos >= val; pos -= 1) {
+        for (pos = cur_val; pos <= val; pos += 1) {
           myservo.write(pos);
           delay(20);
         }
